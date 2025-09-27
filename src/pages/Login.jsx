@@ -59,6 +59,13 @@ const Login = () => {
     <div className="min-h-screen bg-gradient-to-br from-primary-50 to-primary-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div>
+          <div className="flex justify-center mb-4">
+            <img 
+              src="/anasesem.jpg" 
+              alt="Anansesɛm Logo" 
+              className="h-20 w-20 rounded-full object-cover border-4 border-primary-200"
+            />
+          </div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
             Anansesɛm Orders Manager
           </h2>

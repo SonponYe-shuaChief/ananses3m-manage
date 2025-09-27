@@ -9,13 +9,19 @@ export const useBuyList = () => {
   const { profile } = useAuth()
 
   const fetchBuyList = useCallback(async () => {
+    console.log('useBuyList: Profile data:', profile)
+    
     if (!profile?.company_id) {
+      console.warn('useBuyList: No company_id found in profile:', profile)
+      setError('No company ID found. Please contact support.')
       setLoading(false)
       return
     }
 
     try {
       setLoading(true)
+      console.log('useBuyList: Fetching buy list for company_id:', profile.company_id)
+      
       const { data, error } = await supabase
         .from(TABLES.BUY_LIST)
         .select(`
@@ -26,16 +32,20 @@ export const useBuyList = () => {
         .order('created_at', { ascending: false })
 
       if (error) {
+        console.error('useBuyList: Database error:', error)
         setError(error.message)
       } else {
+        console.log('useBuyList: Fetched buy list:', data)
         setBuyList(data || [])
+        setError(null)
       }
     } catch (err) {
+      console.error('useBuyList: Catch error:', err)
       setError(err.message)
     } finally {
       setLoading(false)
     }
-  }, [profile?.company_id])
+  }, [profile])
 
   useEffect(() => {
     fetchBuyList()
@@ -64,24 +74,38 @@ export const useBuyList = () => {
 
   const addItem = async (itemName) => {
     try {
+      console.log('addItem: Attempting to add item:', itemName)
+      console.log('addItem: Profile data:', profile)
+      
+      if (!profile?.company_id) {
+        throw new Error('No company ID found in profile')
+      }
+      
+      const itemData = {
+        item_name: itemName,
+        company_id: profile.company_id,
+        added_by: profile.id,
+      }
+      
+      console.log('addItem: Inserting data:', itemData)
+      
       const { data, error } = await supabase
         .from(TABLES.BUY_LIST)
-        .insert([
-          {
-            item_name: itemName,
-            company_id: profile.company_id,
-            added_by: profile.id,
-          },
-        ])
+        .insert([itemData])
         .select(`
           *,
           profiles:added_by(full_name)
         `)
 
-      if (error) throw error
+      if (error) {
+        console.error('addItem: Database error:', error)
+        throw error
+      }
 
+      console.log('addItem: Success:', data)
       return { data: data[0], error: null }
     } catch (error) {
+      console.error('addItem: Error:', error)
       return { data: null, error }
     }
   }

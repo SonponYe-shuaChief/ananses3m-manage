@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useBuyList } from '../hooks/useBuyList'
 import BuyListItem from '../components/BuyListItem'
+import DebugProfile from '../components/DebugProfile'
 
 const BuyList = () => {
   const [newItem, setNewItem] = useState('')
@@ -56,6 +57,7 @@ const BuyList = () => {
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <DebugProfile />
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-900 mb-2">Shopping List</h1>
         <p className="text-gray-600">
