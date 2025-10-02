@@ -1,10 +1,10 @@
-# Anansesɛm Orders Manager (Amaya)
+# AMAYA Orders Manager
 
-A lightweight SaaS-ready web application designed for small creative and production teams (e.g., design & print shops). Amaya helps managers create, assign, and track orders with design images and detailed specifications, while allowing workers to view and mark their assigned tasks as complete.
+A lightweight SaaS-ready web application designed for small creative and production teams (e.g., design & print shops). AMAYA helps managers create, assign, and track orders with design images and detailed specifications, while allowing workers to view and mark their assigned tasks as complete.
 
 ## 🎯 Purpose
 
-Amaya reduces miscommunication, prevents missed supplies, and provides managers with visibility (analytics) and simple shop-floor coordination. The core value proposition is faster, clearer job handoffs and shared visibility of supplies.
+AMAYA reduces miscommunication, prevents missed supplies, and provides managers with visibility (analytics) and simple shop-floor coordination. The core value proposition is faster, clearer job handoffs and shared visibility of supplies.
 
 **Target Users:** Shop managers and on-floor workers
 
@@ -159,7 +159,7 @@ Amaya reduces miscommunication, prevents missed supplies, and provides managers 
 
 6. **Add a logo image**
    
-   Place your company logo as `public/anasesem.jpg` (or update the image references in the code)
+   Place your company logo as `public/amaya.png` (or update the image references in the code)
 
 7. **Start the development server**
    ```bash
@@ -291,4 +291,4 @@ For support, please open an issue in the GitHub repository or contact the develo
 
 ---
 
-**Amaya** - Empowering small creative teams with better order management.
+**AMAYA** - Empowering small creative teams with better order management.

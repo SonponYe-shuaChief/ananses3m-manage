@@ -1,4 +1,4 @@
-# Anansesɛm Orders Manager (Amaya) - Setup Guide
+# AMAYA Orders Manager - Setup Guide
 
 A lightweight SaaS-ready web app for small creative/production teams to manage orders, assignments, and supplies.
 
@@ -38,7 +38,7 @@ VITE_SUPABASE_ANON_KEY=your-anon-key-here
 
 ### 4. Add Logo
 
-Replace `/public/anasesem.jpg` with your company logo (recommended: 512x512px square image)
+Replace `/public/amaya.png` with your company logo (recommended: 512x512px square image)
 
 ### 5. Run the Application
 

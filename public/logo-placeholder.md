@@ -1,6 +1,6 @@
 # Logo Placeholder
 
-Please add your company logo as `anasesem.jpg` in this directory.
+Please add your company logo as `amaya.png` in this directory.
 
 The logo should be:
 - Format: JPG, PNG, or SVG

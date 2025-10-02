@@ -178,22 +178,22 @@ const Settings = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
-        <p className="text-gray-600">Manage your company settings and team</p>
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Settings</h1>
+        <p className="text-sm sm:text-base text-gray-600">Manage your company settings and team</p>
       </div>
 
       {/* Company Settings */}
       <div className="bg-white rounded-lg shadow">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <h3 className="text-lg font-medium text-gray-900">Company Settings</h3>
-          <p className="text-sm text-gray-500">Your company information</p>
+        <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200">
+          <h3 className="text-base sm:text-lg font-medium text-gray-900">Company Settings</h3>
+          <p className="text-xs sm:text-sm text-gray-500">Your company information</p>
         </div>
 
-        <div className="p-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="p-4 sm:p-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700">
                 Company Name
@@ -213,7 +213,7 @@ const Settings = () => {
               <div className="flex mt-1">
                 <input
                   type="text"
-                  className="input-field bg-gray-50 rounded-r-none"
+                  className="input-field bg-gray-50 rounded-r-none text-xs sm:text-sm"
                   value={company?.id || ''}
                   disabled
                 />
@@ -222,7 +222,7 @@ const Settings = () => {
                     navigator.clipboard.writeText(company?.id || '')
                     toast.success('Company ID copied!')
                   }}
-                  className="px-3 py-2 bg-gray-200 text-gray-700 rounded-r-md hover:bg-gray-300 border border-l-0 border-gray-300"
+                  className="px-2 sm:px-3 py-2 bg-gray-200 text-gray-700 rounded-r-md hover:bg-gray-300 border border-l-0 border-gray-300 text-xs sm:text-sm"
                 >
                   Copy
                 </button>
@@ -261,15 +261,15 @@ const Settings = () => {
         <>
           {/* Team Members */}
           <div className="bg-white rounded-lg shadow">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <div className="flex items-center justify-between">
+            <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
                 <div>
-                  <h3 className="text-lg font-medium text-gray-900">Team Members</h3>
-                  <p className="text-sm text-gray-500">Manage your team members</p>
+                  <h3 className="text-base sm:text-lg font-medium text-gray-900">Team Members</h3>
+                  <p className="text-xs sm:text-sm text-gray-500">Manage your team members</p>
                 </div>
                 <button
                   onClick={() => setShowInviteForm(true)}
-                  className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
+                  className="w-full sm:w-auto px-3 sm:px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 text-sm"
                 >
                   Invite Member
                 </button>
@@ -278,8 +278,8 @@ const Settings = () => {
 
             <div className="divide-y divide-gray-200">
               {workers.length === 0 ? (
-                <div className="px-6 py-8 text-center">
-                  <p className="text-gray-500">No team members yet</p>
+                <div className="px-4 sm:px-6 py-6 sm:py-8 text-center">
+                  <p className="text-gray-500 text-sm sm:text-base">No team members yet</p>
                   <button
                     onClick={() => setShowInviteForm(true)}
                     className="mt-2 text-primary-600 hover:text-primary-500 text-sm"
@@ -289,19 +289,19 @@ const Settings = () => {
                 </div>
               ) : (
                 workers.map((worker) => (
-                  <div key={worker.id} className="px-6 py-4 flex items-center justify-between">
+                  <div key={worker.id} className="px-4 sm:px-6 py-3 sm:py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
                     <div>
                       <p className="text-sm font-medium text-gray-900">{worker.full_name}</p>
                       <p className="text-sm text-gray-500">{worker.email}</p>
                       <p className="text-xs text-gray-400 capitalize">{worker.role}</p>
                     </div>
-                    <div className="flex items-center space-x-2">
+                    <div className="flex flex-col sm:flex-row sm:items-center space-y-1 sm:space-y-0 sm:space-x-2">
                       <span className="text-xs text-gray-400">
                         Joined {new Date(worker.created_at).toLocaleDateString()}
                       </span>
                       <button
                         onClick={() => handleRemoveWorker(worker.id)}
-                        className="text-red-600 hover:text-red-500 text-sm"
+                        className="text-red-600 hover:text-red-500 text-sm self-start sm:self-auto"
                       >
                         Remove
                       </button>
@@ -314,19 +314,19 @@ const Settings = () => {
 
           {/* Pending Invitations */}
           <div className="bg-white rounded-lg shadow">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h3 className="text-lg font-medium text-gray-900">Pending Invitations</h3>
-              <p className="text-sm text-gray-500">Invitations that haven't been accepted yet</p>
+            <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200">
+              <h3 className="text-base sm:text-lg font-medium text-gray-900">Pending Invitations</h3>
+              <p className="text-xs sm:text-sm text-gray-500">Invitations that haven't been accepted yet</p>
             </div>
 
             <div className="divide-y divide-gray-200">
               {invitations.length === 0 ? (
-                <div className="px-6 py-8 text-center">
-                  <p className="text-gray-500">No pending invitations</p>
+                <div className="px-4 sm:px-6 py-6 sm:py-8 text-center">
+                  <p className="text-gray-500 text-sm sm:text-base">No pending invitations</p>
                 </div>
               ) : (
                 invitations.map((invitation) => (
-                  <div key={invitation.id} className="px-6 py-4 flex items-center justify-between">
+                  <div key={invitation.id} className="px-4 sm:px-6 py-3 sm:py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
                     <div>
                       <p className="text-sm font-medium text-gray-900">{invitation.email}</p>
                       <div className="flex items-center space-x-2 mt-1">
@@ -336,19 +336,19 @@ const Settings = () => {
                         <span className="text-xs text-gray-500 capitalize">{invitation.role}</span>
                       </div>
                     </div>
-                    <div className="flex items-center space-x-2">
+                    <div className="flex flex-col sm:flex-row gap-2 sm:gap-0 sm:items-center sm:space-x-2">
                       <button
                         onClick={() => {
                           navigator.clipboard.writeText(invitation.code)
                           toast.success('Invitation code copied!')
                         }}
-                        className="text-primary-600 hover:text-primary-500 text-sm"
+                        className="text-primary-600 hover:text-primary-500 text-sm self-start sm:self-auto"
                       >
                         Copy Code
                       </button>
                       <button
                         onClick={() => handleDeleteInvitation(invitation.id)}
-                        className="text-red-600 hover:text-red-500 text-sm"
+                        className="text-red-600 hover:text-red-500 text-sm self-start sm:self-auto"
                       >
                         Delete
                       </button>
@@ -361,50 +361,15 @@ const Settings = () => {
         </>
       )}
 
-      {/* Subscription Tier Placeholder */}
-      <div className="bg-white rounded-lg shadow">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <h3 className="text-lg font-medium text-gray-900">Subscription</h3>
-          <p className="text-sm text-gray-500">Manage your subscription plan</p>
-        </div>
-
-        <div className="p-6">
-          <div className="bg-gradient-to-r from-primary-50 to-primary-100 border border-primary-200 rounded-lg p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <h4 className="text-lg font-medium text-primary-900">Free Plan</h4>
-                <p className="text-sm text-primary-700">
-                  You're currently on the free plan with basic features
-                </p>
-                <ul className="mt-2 text-sm text-primary-600 space-y-1">
-                  <li>• Up to 10 team members</li>
-                  <li>• Up to 100 orders per month</li>
-                  <li>• Basic analytics</li>
-                  <li>• Email support</li>
-                </ul>
-              </div>
-              <div className="text-right">
-                <p className="text-2xl font-bold text-primary-900">$0</p>
-                <p className="text-sm text-primary-700">per month</p>
-                <button
-                  onClick={() => toast.info('Upgrade functionality coming soon!')}
-                  className="mt-2 px-4 py-2 bg-primary-600 text-white rounded hover:bg-primary-700 text-sm"
-                >
-                  Upgrade
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+    
 
       {/* Invite Member Modal */}
       {showInviteForm && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-lg max-w-md w-full mx-4">
-            <div className="px-6 py-4 border-b border-gray-200">
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-lg max-w-md w-full">
+            <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200">
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-medium text-gray-900">Invite Team Member</h3>
+                <h3 className="text-base sm:text-lg font-medium text-gray-900">Invite Team Member</h3>
                 <button
                   onClick={() => {
                     setShowInviteForm(false)
@@ -418,7 +383,7 @@ const Settings = () => {
               </div>
             </div>
 
-            <form onSubmit={handleSendInvitation} className="p-6 space-y-4">
+            <form onSubmit={handleSendInvitation} className="p-4 sm:p-6 space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700">
                   Email Address *
@@ -447,7 +412,7 @@ const Settings = () => {
                 </select>
               </div>
 
-              <div className="flex justify-end space-x-3 pt-4">
+              <div className="flex flex-col sm:flex-row justify-end gap-3 sm:gap-0 sm:space-x-3 pt-4">
                 <button
                   type="button"
                   onClick={() => {
@@ -455,13 +420,13 @@ const Settings = () => {
                     setInviteEmail('')
                     setInviteRole('worker')
                   }}
-                  className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                  className="w-full sm:w-auto px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 text-sm sm:text-base order-2 sm:order-1"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700"
+                  className="w-full sm:w-auto px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 text-sm sm:text-base order-1 sm:order-2"
                 >
                   Send Invitation
                 </button>

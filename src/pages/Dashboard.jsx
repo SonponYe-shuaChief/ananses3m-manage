@@ -182,21 +182,21 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Welcome Header */}
-      <div className="bg-white rounded-lg shadow p-6">
-        <div className="flex items-center justify-between">
+      <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-3 sm:space-y-0">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
               Welcome back, {profile?.full_name}!
             </h1>
-            <p className="text-gray-600">
+            <p className="text-sm sm:text-base text-gray-600">
               {profile?.role === 'manager' ? 'Manager Dashboard' : 'Worker Dashboard'}
             </p>
           </div>
-          <div className="text-right">
-            <p className="text-sm text-gray-500">Today</p>
-            <p className="text-lg font-semibold text-gray-900">
+          <div className="text-left sm:text-right">
+            <p className="text-xs sm:text-sm text-gray-500">Today</p>
+            <p className="text-base sm:text-lg font-semibold text-gray-900">
               {new Date().toLocaleDateString()}
             </p>
           </div>
@@ -204,61 +204,61 @@ const Dashboard = () => {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white rounded-lg shadow p-6">
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <div className="w-8 h-8 bg-blue-500 rounded-md flex items-center justify-center">
-                <span className="text-white font-bold">📊</span>
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
+        <div className="bg-white rounded-lg shadow p-3 sm:p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center">
+            <div className="flex-shrink-0 mb-2 sm:mb-0">
+              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-blue-500 rounded-md flex items-center justify-center">
+                <span className="text-white font-bold text-xs sm:text-base">📊</span>
               </div>
             </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-500">Total Orders</p>
-              <p className="text-2xl font-semibold text-gray-900">{stats.totalOrders}</p>
+            <div className="sm:ml-4">
+              <p className="text-xs sm:text-sm font-medium text-gray-500">Total Orders</p>
+              <p className="text-lg sm:text-2xl font-semibold text-gray-900">{stats.totalOrders}</p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow p-6">
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <div className="w-8 h-8 bg-yellow-500 rounded-md flex items-center justify-center">
-                <span className="text-white font-bold">📅</span>
+        <div className="bg-white rounded-lg shadow p-3 sm:p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center">
+            <div className="flex-shrink-0 mb-2 sm:mb-0">
+              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-yellow-500 rounded-md flex items-center justify-center">
+                <span className="text-white font-bold text-xs sm:text-base">📅</span>
               </div>
             </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-500">Due Today</p>
-              <p className="text-2xl font-semibold text-gray-900">{stats.dueToday}</p>
+            <div className="sm:ml-4">
+              <p className="text-xs sm:text-sm font-medium text-gray-500">Due Today</p>
+              <p className="text-lg sm:text-2xl font-semibold text-gray-900">{stats.dueToday}</p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow p-6">
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <div className="w-8 h-8 bg-red-500 rounded-md flex items-center justify-center">
-                <span className="text-white font-bold">⚠️</span>
+        <div className="bg-white rounded-lg shadow p-3 sm:p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center">
+            <div className="flex-shrink-0 mb-2 sm:mb-0">
+              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-red-500 rounded-md flex items-center justify-center">
+                <span className="text-white font-bold text-xs sm:text-base">⚠️</span>
               </div>
             </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-500">Overdue</p>
-              <p className="text-2xl font-semibold text-gray-900">{stats.overdue}</p>
+            <div className="sm:ml-4">
+              <p className="text-xs sm:text-sm font-medium text-gray-500">Overdue</p>
+              <p className="text-lg sm:text-2xl font-semibold text-gray-900">{stats.overdue}</p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow p-6">
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <div className="w-8 h-8 bg-green-500 rounded-md flex items-center justify-center">
-                <span className="text-white font-bold">✅</span>
+        <div className="bg-white rounded-lg shadow p-3 sm:p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center">
+            <div className="flex-shrink-0 mb-2 sm:mb-0">
+              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-green-500 rounded-md flex items-center justify-center">
+                <span className="text-white font-bold text-xs sm:text-base">✅</span>
               </div>
             </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-500">
+            <div className="sm:ml-4">
+              <p className="text-xs sm:text-sm font-medium text-gray-500">
                 {profile?.role === 'manager' ? 'Completed' : 'Marked Done'}
               </p>
-              <p className="text-2xl font-semibold text-gray-900">{stats.completed}</p>
+              <p className="text-lg sm:text-2xl font-semibold text-gray-900">{stats.completed}</p>
             </div>
           </div>
         </div>
@@ -266,14 +266,14 @@ const Dashboard = () => {
 
       {/* Recent Orders */}
       <div className="bg-white rounded-lg shadow">
-        <div className="px-6 py-4 border-b border-gray-200">
+        <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-medium text-gray-900">
+            <h3 className="text-base sm:text-lg font-medium text-gray-900">
               {profile?.role === 'manager' ? 'Recent Orders' : 'My Work Today'}
             </h3>
             <Link 
               to="/orders" 
-              className="text-primary-600 hover:text-primary-500 text-sm font-medium"
+              className="text-primary-600 hover:text-primary-500 text-xs sm:text-sm font-medium"
             >
               View all →
             </Link>

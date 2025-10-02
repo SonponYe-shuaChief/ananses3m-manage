@@ -127,23 +127,23 @@ const Login = () => {
 
   if (showForgotPassword) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-md w-full space-y-8">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-md w-full space-y-6 sm:space-y-8">
           <div>
             <img
-              className="mx-auto h-24 w-24 rounded-full object-cover"
-              src="/anasesem.jpg"
-              alt="Anansesɛm Logo"
+              className="mx-auto h-20 w-20 sm:h-24 sm:w-24 rounded-full object-cover"
+              src="/amaya.png"
+              alt="AMAYA Logo"
             />
-            <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+            <h2 className="mt-4 sm:mt-6 text-center text-2xl sm:text-3xl font-extrabold text-gray-900">
               Reset your password
             </h2>
-            <p className="mt-2 text-center text-sm text-gray-600">
+            <p className="mt-2 text-center text-xs sm:text-sm text-gray-600">
               Enter your email address and we'll send you a reset link.
             </p>
           </div>
           
-          <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          <form className="mt-6 sm:mt-8 space-y-4 sm:space-y-6" onSubmit={handleSubmit}>
             <div>
               <label htmlFor="email" className="sr-only">
                 Email address
@@ -165,7 +165,7 @@ const Login = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="btn-primary"
+                className="btn-primary text-sm sm:text-base py-2.5 sm:py-3"
               >
                 {loading ? 'Sending...' : 'Send Reset Email'}
               </button>
@@ -173,7 +173,7 @@ const Login = () => {
               <button
                 type="button"
                 onClick={() => setShowForgotPassword(false)}
-                className="btn-secondary"
+                className="btn-secondary text-sm sm:text-base py-2.5 sm:py-3"
               >
                 Back to Sign In
               </button>
@@ -185,24 +185,24 @@ const Login = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-6 sm:space-y-8">
         <div>
           <img
-            className="mx-auto h-24 w-24 rounded-full object-cover"
-            src="/anasesem.jpg"
-            alt="Anansesɛm Logo"
+            className="mx-auto h-20 w-20 sm:h-24 sm:w-24 rounded-full object-cover"
+            src="/amaya.png"
+            alt="AMAYA Logo"
           />
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+          <h2 className="mt-4 sm:mt-6 text-center text-2xl sm:text-3xl font-extrabold text-gray-900">
             {isSignUp ? 'Create your account' : 'Sign in to your account'}
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Anansesɛm Orders Manager - Amaya
+          <p className="mt-2 text-center text-xs sm:text-sm text-gray-600">
+            AMAYA Orders Manager
           </p>
         </div>
         
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="space-y-4">
+        <form className="mt-6 sm:mt-8 space-y-4 sm:space-y-6" onSubmit={handleSubmit}>
+          <div className="space-y-3 sm:space-y-4">
             {isSignUp && (
               <>
                 <div>
@@ -332,7 +332,7 @@ const Login = () => {
             <button
               type="submit"
               disabled={loading}
-              className="btn-primary"
+              className="btn-primary text-sm sm:text-base py-2.5 sm:py-3"
             >
               {loading 
                 ? (isSignUp ? 'Creating Account...' : 'Signing In...') 
@@ -344,7 +344,7 @@ const Login = () => {
               <button
                 type="button"
                 onClick={() => setShowForgotPassword(true)}
-                className="w-full text-center text-sm text-primary-600 hover:text-primary-500"
+                className="w-full text-center text-xs sm:text-sm text-primary-600 hover:text-primary-500"
               >
                 Forgot your password?
               </button>
@@ -354,7 +354,7 @@ const Login = () => {
               <button
                 type="button"
                 onClick={toggleMode}
-                className="text-sm text-primary-600 hover:text-primary-500"
+                className="text-xs sm:text-sm text-primary-600 hover:text-primary-500"
               >
                 {isSignUp 
                   ? 'Already have an account? Sign in' 

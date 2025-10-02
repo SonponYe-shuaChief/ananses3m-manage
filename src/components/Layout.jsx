@@ -35,11 +35,11 @@ const Layout = ({ children }) => {
           {/* Logo */}
           <div className="flex items-center justify-center h-16 px-4 bg-primary-600">
             <img 
-              src="/anasesem.jpg" 
-              alt="Anansesɛm Logo" 
+              src="/amaya.png" 
+              alt="AMAYA Logo" 
               className="h-8 w-8 rounded-full"
             />
-            <span className="ml-2 text-lg font-semibold text-white">Amaya</span>
+            <span className="ml-2 text-lg font-semibold text-white">AMAYA</span>
           </div>
 
           {/* Navigation */}
@@ -106,7 +106,7 @@ const Layout = ({ children }) => {
 
             <div className="flex items-center space-x-4">
               <h1 className="text-xl font-semibold text-gray-900">
-                Anansesɛm Orders Manager
+                AMAYA Orders Manager
               </h1>
             </div>
 

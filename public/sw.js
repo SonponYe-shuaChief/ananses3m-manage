@@ -1,10 +1,10 @@
-// Simple Service Worker for Anansesɛm Orders Manager PWA
+// Simple Service Worker for AMAYA Orders Manager PWA
 const CACHE_NAME = 'amaya-v1'
 const urlsToCache = [
   '/',
   '/static/js/bundle.js',
   '/static/css/main.css',
-  '/anasesem.jpg'
+  '/amaya.png'
 ]
 
 self.addEventListener('install', (event) => {
@@ -30,12 +30,12 @@ self.addEventListener('fetch', (event) => {
 // Handle push notifications (for future implementation)
 self.addEventListener('push', (event) => {
   const options = {
-    body: event.data ? event.data.text() : 'New notification from Amaya',
-    icon: '/anasesem.jpg',
-    badge: '/anasesem.jpg'
+    body: event.data ? event.data.text() : 'New notification from AMAYA',
+    icon: '/amaya.png',
+    badge: '/amaya.png'
   }
 
   event.waitUntil(
-    self.registration.showNotification('Amaya Notification', options)
+    self.registration.showNotification('AMAYA Notification', options)
   )
 })

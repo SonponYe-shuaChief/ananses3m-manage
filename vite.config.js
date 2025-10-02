@@ -8,24 +8,24 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'anasesem.jpg'],
+      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'amaya.png'],
       manifest: {
-        name: 'Anansesɛm Orders Manager',
-        short_name: 'Amaya',
+        name: 'AMAYA Orders Manager',
+        short_name: 'AMAYA',
         description: 'Lightweight SaaS-ready web app for small creative/production teams',
         theme_color: '#3b82f6',
         background_color: '#ffffff',
         display: 'standalone',
         icons: [
           {
-            src: 'anasesem.jpg',
+            src: 'amaya.png',
             sizes: '192x192',
-            type: 'image/jpeg'
+            type: 'image/png'
           },
           {
-            src: 'anasesem.jpg',
+            src: 'amaya.png',
             sizes: '512x512',
-            type: 'image/jpeg'
+            type: 'image/png'
           }
         ]
       }

@@ -1,5 +1,5 @@
 
-# Complete Database Setup for Anansesɛm Orders Manager
+# Complete Database Setup for AMAYA Orders Manager
 
 **Copy and paste this entire SQL script into your Supabase SQL Editor and run it all at once:**
 

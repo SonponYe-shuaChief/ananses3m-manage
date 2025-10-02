@@ -105,22 +105,22 @@ const Profile = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Profile</h1>
-        <p className="text-gray-600">Manage your account information</p>
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Profile</h1>
+        <p className="text-sm sm:text-base text-gray-600">Manage your account information</p>
       </div>
 
       {/* Profile Information Card */}
       <div className="bg-white rounded-lg shadow">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <h3 className="text-lg font-medium text-gray-900">Personal Information</h3>
-          <p className="text-sm text-gray-500">Update your personal details below</p>
+        <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200">
+          <h3 className="text-base sm:text-lg font-medium text-gray-900">Personal Information</h3>
+          <p className="text-xs sm:text-sm text-gray-500">Update your personal details below</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label htmlFor="full_name" className="block text-sm font-medium text-gray-700">
                 Full Name *
@@ -184,7 +184,7 @@ const Profile = () => {
             <button
               type="submit"
               disabled={updating}
-              className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full sm:w-auto px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
             >
               {updating ? 'Updating...' : 'Update Profile'}
             </button>
@@ -194,14 +194,14 @@ const Profile = () => {
 
       {/* Company Information Card */}
       <div className="bg-white rounded-lg shadow">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <h3 className="text-lg font-medium text-gray-900">Company Information</h3>
-          <p className="text-sm text-gray-500">Your company details</p>
+        <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200">
+          <h3 className="text-base sm:text-lg font-medium text-gray-900">Company Information</h3>
+          <p className="text-xs sm:text-sm text-gray-500">Your company details</p>
         </div>
 
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           {company ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700">
                   Company Name
@@ -262,14 +262,14 @@ const Profile = () => {
 
       {/* Account Security Card */}
       <div className="bg-white rounded-lg shadow">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <h3 className="text-lg font-medium text-gray-900">Account Security</h3>
-          <p className="text-sm text-gray-500">Manage your account security settings</p>
+        <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200">
+          <h3 className="text-base sm:text-lg font-medium text-gray-900">Account Security</h3>
+          <p className="text-xs sm:text-sm text-gray-500">Manage your account security settings</p>
         </div>
 
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           <div className="space-y-4">
-            <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 border border-gray-200 rounded-lg gap-3 sm:gap-0">
               <div>
                 <h4 className="text-sm font-medium text-gray-900">Password</h4>
                 <p className="text-sm text-gray-500">
@@ -281,16 +281,16 @@ const Profile = () => {
                   // This would typically trigger a password reset email
                   toast.info('Password reset functionality can be added here')
                 }}
-                className="px-3 py-1 text-sm text-primary-600 hover:text-primary-500"
+                className="w-full sm:w-auto px-3 py-1 text-sm text-primary-600 hover:text-primary-500"
               >
                 Change Password
               </button>
             </div>
 
-            <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 border border-gray-200 rounded-lg gap-3 sm:gap-0">
               <div>
                 <h4 className="text-sm font-medium text-gray-900">Two-Factor Authentication</h4>
-                <p className="text-sm text-gray-500">
+                <p className="text-xs sm:text-sm text-gray-500">
                   Add an extra layer of security to your account
                 </p>
               </div>
@@ -298,13 +298,13 @@ const Profile = () => {
                 onClick={() => {
                   toast.info('2FA setup can be implemented here')
                 }}
-                className="px-3 py-1 text-sm text-primary-600 hover:text-primary-500"
+                className="w-full sm:w-auto px-3 py-1 text-sm text-primary-600 hover:text-primary-500"
               >
                 Setup 2FA
               </button>
             </div>
 
-            <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 border border-gray-200 rounded-lg gap-3 sm:gap-0">
               <div>
                 <h4 className="text-sm font-medium text-gray-900">Login Sessions</h4>
                 <p className="text-sm text-gray-500">
@@ -315,7 +315,7 @@ const Profile = () => {
                 onClick={() => {
                   toast.info('Session management can be implemented here')
                 }}
-                className="px-3 py-1 text-sm text-primary-600 hover:text-primary-500"
+                className="w-full sm:w-auto px-3 py-1 text-sm text-primary-600 hover:text-primary-500"
               >
                 View Sessions
               </button>
@@ -326,14 +326,14 @@ const Profile = () => {
 
       {/* Account Actions Card */}
       <div className="bg-white rounded-lg shadow">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <h3 className="text-lg font-medium text-gray-900">Account Actions</h3>
-          <p className="text-sm text-gray-500">Dangerous actions that affect your account</p>
+        <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200">
+          <h3 className="text-base sm:text-lg font-medium text-gray-900">Account Actions</h3>
+          <p className="text-xs sm:text-sm text-gray-500">Dangerous actions that affect your account</p>
         </div>
 
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           <div className="space-y-4">
-            <div className="flex items-center justify-between p-4 border border-red-200 rounded-lg bg-red-50">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 border border-red-200 rounded-lg bg-red-50 gap-3 sm:gap-0">
               <div>
                 <h4 className="text-sm font-medium text-red-900">Delete Account</h4>
                 <p className="text-sm text-red-700">
@@ -346,7 +346,7 @@ const Profile = () => {
                     toast.error('Account deletion functionality needs to be implemented')
                   }
                 }}
-                className="px-3 py-1 text-sm bg-red-100 text-red-700 rounded hover:bg-red-200"
+                className="w-full sm:w-auto px-3 py-1 text-sm bg-red-100 text-red-700 rounded hover:bg-red-200"
               >
                 Delete Account
               </button>
