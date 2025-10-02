@@ -733,7 +733,12 @@ const Orders = () => {
                             {order.priority} priority
                           </span>
                           {order.marked_done && (
-                            <span className="badge badge-success">⭐ Marked Done</span>
+                            <span className="badge badge-success flex items-center gap-1">
+                              <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path>
+                              </svg>
+                              Completed
+                            </span>
                           )}
                         </div>
                       </div>
@@ -824,9 +829,12 @@ const Orders = () => {
                             e.stopPropagation()
                             markOrderDone(order.id, order.assignment_id)
                           }}
-                          className="flex-1 px-3 py-1 text-sm bg-green-100 text-green-800 rounded hover:bg-green-200 whitespace-nowrap"
+                          className="flex-1 px-3 py-1 text-sm bg-green-100 text-green-800 rounded hover:bg-green-200 whitespace-nowrap flex items-center justify-center gap-1"
                         >
-                          ⭐ Mark Done
+                          <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path>
+                          </svg>
+                          Mark Done
                         </button>
                       )
                     )}

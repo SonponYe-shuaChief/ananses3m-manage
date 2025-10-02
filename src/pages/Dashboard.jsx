@@ -187,9 +187,9 @@ const Dashboard = () => {
       <div className="bg-white rounded-lg shadow p-4 sm:p-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-3 sm:space-y-0">
           <div>
-            <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
+            <h3 className="text-xl sm:text-2xl font-bold text-gray-900">
               Welcome back, {profile?.full_name}!
-            </h1>
+            </h3>
             <p className="text-sm sm:text-base text-gray-600">
               {profile?.role === 'manager' ? 'Manager Dashboard' : 'Worker Dashboard'}
             </p>
@@ -209,7 +209,9 @@ const Dashboard = () => {
           <div className="flex flex-col sm:flex-row sm:items-center">
             <div className="flex-shrink-0 mb-2 sm:mb-0">
               <div className="w-6 h-6 sm:w-8 sm:h-8 bg-blue-500 rounded-md flex items-center justify-center">
-                <span className="text-white font-bold text-xs sm:text-base">📊</span>
+                <svg className="w-3 h-3 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
               </div>
             </div>
             <div className="sm:ml-4">
@@ -223,7 +225,9 @@ const Dashboard = () => {
           <div className="flex flex-col sm:flex-row sm:items-center">
             <div className="flex-shrink-0 mb-2 sm:mb-0">
               <div className="w-6 h-6 sm:w-8 sm:h-8 bg-yellow-500 rounded-md flex items-center justify-center">
-                <span className="text-white font-bold text-xs sm:text-base">📅</span>
+                <svg className="w-3 h-3 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
               </div>
             </div>
             <div className="sm:ml-4">
@@ -237,7 +241,9 @@ const Dashboard = () => {
           <div className="flex flex-col sm:flex-row sm:items-center">
             <div className="flex-shrink-0 mb-2 sm:mb-0">
               <div className="w-6 h-6 sm:w-8 sm:h-8 bg-red-500 rounded-md flex items-center justify-center">
-                <span className="text-white font-bold text-xs sm:text-base">⚠️</span>
+                <svg className="w-3 h-3 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.864-.833-2.634 0L4.18 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                </svg>
               </div>
             </div>
             <div className="sm:ml-4">
@@ -251,7 +257,9 @@ const Dashboard = () => {
           <div className="flex flex-col sm:flex-row sm:items-center">
             <div className="flex-shrink-0 mb-2 sm:mb-0">
               <div className="w-6 h-6 sm:w-8 sm:h-8 bg-green-500 rounded-md flex items-center justify-center">
-                <span className="text-white font-bold text-xs sm:text-base">✅</span>
+                <svg className="w-3 h-3 sm:w-5 sm:h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path>
+                </svg>
               </div>
             </div>
             <div className="sm:ml-4">
@@ -364,7 +372,11 @@ const Dashboard = () => {
               className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200"
             >
               <div className="flex-shrink-0">
-                <span className="text-2xl">📋</span>
+                <div className="w-8 h-8 bg-blue-500 rounded-md flex items-center justify-center">
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+                  </svg>
+                </div>
               </div>
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-900">View My Orders</p>

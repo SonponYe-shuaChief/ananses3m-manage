@@ -2,7 +2,7 @@
 
 A lightweight SaaS-ready web app for small creative/production teams to manage orders, assignments, and supplies.
 
-## 🚀 Quick Start
+## Quick Start
 
 ### 1. Prerequisites
 
@@ -53,7 +53,7 @@ npm run build
 npm run preview
 ```
 
-## 📱 Features
+## Features
 
 ### For Managers
 - **Company Setup**: Create company and invite team members
@@ -75,7 +75,7 @@ npm run preview
 - **Responsive Design**: Works on desktop, tablet, and mobile
 - **Role-based Access**: Different interfaces for managers and workers
 
-## 🏗️ Architecture
+## Architecture
 
 ### Tech Stack
 - **Frontend**: React 18 + Vite
@@ -115,7 +115,7 @@ src/
 - **invitations**: Team invitation system
 - **buy_list**: Supply management (optional)
 
-## 🔧 Configuration
+## Configuration
 
 ### Environment Variables
 ```env
@@ -181,10 +181,10 @@ Custom utility classes defined in `src/index.css`:
 #### Working on Orders (Workers)
 - View order details and specifications
 - Check reference images
-- Mark as done when completed (⭐ button)
+- Mark as done when completed (checkmark button)
 - Manager will update official status
 
-## 🚀 Deployment
+## Deployment
 
 ### Vercel (Recommended)
 ```bash
@@ -262,11 +262,11 @@ npm run lint
 - Use React Developer Tools for component debugging
 - Test with multiple users/companies to verify isolation
 
-## 📝 License
+## License
 
 This project is created for educational and business use. Customize and deploy as needed.
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch

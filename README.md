@@ -2,13 +2,13 @@
 
 A lightweight SaaS-ready web application designed for small creative and production teams (e.g., design & print shops). AMAYA helps managers create, assign, and track orders with design images and detailed specifications, while allowing workers to view and mark their assigned tasks as complete.
 
-## 🎯 Purpose
+## Purpose
 
 AMAYA reduces miscommunication, prevents missed supplies, and provides managers with visibility (analytics) and simple shop-floor coordination. The core value proposition is faster, clearer job handoffs and shared visibility of supplies.
 
 **Target Users:** Shop managers and on-floor workers
 
-## 🚀 Features
+## Features
 
 ### For Managers
 - **Order Management**: Create, edit, and track orders with detailed specifications
@@ -23,7 +23,7 @@ AMAYA reduces miscommunication, prevents missed supplies, and provides managers 
 - **Real-time Updates**: Get notified of new assignments
 - **Order Details**: Access all order specifications and reference materials
 
-## 🛠 Tech Stack
+## Tech Stack
 
 - **Frontend**: React 18 + Vite
 - **Styling**: Tailwind CSS
@@ -210,7 +210,7 @@ src/
 - App manifest for installation
 - Push notification support (framework ready)
 
-## 🚀 Deployment
+## Deployment
 
 1. **Build the project**
    ```bash
@@ -225,7 +225,7 @@ src/
 
 3. **Update environment variables** in your deployment platform
 
-## 📝 Usage
+## Usage
 
 ### For New Companies
 1. Sign up and select "Create new company"
@@ -252,7 +252,7 @@ src/
 3. Mark orders as done when completed
 4. Manager receives notification of completion
 
-## 🔧 Configuration
+## Configuration
 
 ### Supabase Storage (Optional)
 For file uploads, enable Supabase Storage and create a bucket:
@@ -273,7 +273,7 @@ Enable real-time on required tables in your Supabase dashboard:
 - order_assignments  
 - buy_list
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch
@@ -281,7 +281,7 @@ Enable real-time on required tables in your Supabase dashboard:
 4. Add tests if applicable
 5. Submit a pull request
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License.
 
