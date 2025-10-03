@@ -11,6 +11,35 @@ import Profile from './pages/Profile'
 import Settings from './pages/Settings'
 
 function App() {
+  // Check if environment variables are properly set
+  const hasValidConfig = import.meta.env.VITE_SUPABASE_URL && 
+                        import.meta.env.VITE_SUPABASE_ANON_KEY &&
+                        import.meta.env.VITE_SUPABASE_URL !== 'your_supabase_project_url_here' &&
+                        import.meta.env.VITE_SUPABASE_ANON_KEY !== 'your_supabase_anon_key_here'
+
+  if (!hasValidConfig) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="max-w-md mx-auto text-center">
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <div className="w-16 h-16 mx-auto mb-4 bg-yellow-100 rounded-full flex items-center justify-center">
+              <svg className="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+              </svg>
+            </div>
+            <h1 className="text-xl font-semibold text-gray-900 mb-2">Configuration Required</h1>
+            <p className="text-gray-600 mb-4">
+              The application needs to be configured with Supabase environment variables.
+            </p>
+            <p className="text-sm text-gray-500">
+              Please contact your administrator or check the deployment settings.
+            </p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <AuthProvider>
       <Router>
