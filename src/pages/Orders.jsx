@@ -251,52 +251,78 @@ const Orders = () => {
       // Upload images first
       const imageUrls = await uploadImages()
 
-      // Create order
-      const { data: order, error: orderError } = await supabase
-        .from('orders')
-        .insert({
-          title: formData.title,
-          details: formData.details,
-          client_name: formData.client_name,
-          due_date: formData.due_date,
-          priority: formData.priority,
-          category: formData.category,
-          quantity: formData.quantity,
-          specs: formData.specs,
-          assignment_type: formData.assignment_type,
-          company_id: profile.company_id,
-          created_by: user.id,
-          status: 'pending',
-          image_urls: imageUrls
-        })
-        .select()
-        .single()
+      const isEditing = formData.editingOrderId
 
-      if (orderError) throw orderError
+      if (isEditing) {
+        // Update existing order
+        const { error: orderError } = await supabase
+          .from('orders')
+          .update({
+            title: formData.title,
+            details: formData.details,
+            client_name: formData.client_name,
+            due_date: formData.due_date,
+            priority: formData.priority,
+            category: formData.category,
+            quantity: formData.quantity,
+            specs: formData.specs,
+            assignment_type: formData.assignment_type,
+            image_urls: imageUrls.length > 0 ? imageUrls : formData.images
+          })
+          .eq('id', formData.editingOrderId)
 
-      // Create assignments if specific workers selected
-      if (formData.assignment_type === 'specific' && formData.assigned_workers.length > 0) {
-        const assignments = formData.assigned_workers.map(workerId => ({
-          order_id: order.id,
-          worker_id: workerId,
-          assigned_by: user.id
-        }))
+        if (orderError) throw orderError
 
-        const { error: assignmentError } = await supabase
-          .from('order_assignments')
-          .insert(assignments)
+        toast.success('Order updated successfully!')
+      } else {
+        // Create new order
+        const { data: order, error: orderError } = await supabase
+          .from('orders')
+          .insert({
+            title: formData.title,
+            details: formData.details,
+            client_name: formData.client_name,
+            due_date: formData.due_date,
+            priority: formData.priority,
+            category: formData.category,
+            quantity: formData.quantity,
+            specs: formData.specs,
+            assignment_type: formData.assignment_type,
+            company_id: profile.company_id,
+            created_by: user.id,
+            status: 'pending',
+            image_urls: imageUrls
+          })
+          .select()
+          .single()
 
-        if (assignmentError) throw assignmentError
+        if (orderError) throw orderError
+
+        // Create assignments if specific workers selected
+        if (formData.assignment_type === 'specific' && formData.assigned_workers.length > 0) {
+          const assignments = formData.assigned_workers.map(workerId => ({
+            order_id: order.id,
+            worker_id: workerId,
+            assigned_by: user.id
+          }))
+
+          const { error: assignmentError } = await supabase
+            .from('order_assignments')
+            .insert(assignments)
+
+          if (assignmentError) throw assignmentError
+        }
+
+        toast.success('Order created successfully!')
       }
 
-      toast.success('Order created successfully!')
       setShowCreateForm(false)
       resetForm()
       await fetchManagerOrders(profile.company_id)
 
     } catch (error) {
-      console.error('Error creating order:', error)
-      toast.error('Failed to create order')
+      console.error(`Error ${formData.editingOrderId ? 'updating' : 'creating'} order:`, error)
+      toast.error(`Failed to ${formData.editingOrderId ? 'update' : 'create'} order`)
     } finally {
       setLoading(false)
     }
@@ -352,6 +378,59 @@ const Orders = () => {
     }
   }
 
+  const editOrder = (order) => {
+    setFormData({
+      title: order.title,
+      details: order.details || '',
+      client_name: order.client_name,
+      due_date: order.due_date,
+      priority: order.priority,
+      category: order.category || '',
+      quantity: order.quantity || 1,
+      specs: order.specs || {},
+      assignment_type: order.assignment_type,
+      assigned_workers: [], // Will be filled from assignments
+      images: order.image_urls || []
+    })
+    setShowCreateForm(true)
+    // Store the order being edited
+    setFormData(prev => ({ ...prev, editingOrderId: order.id }))
+  }
+
+  const deleteOrder = async (orderId) => {
+    if (!window.confirm('Are you sure you want to delete this order? This action cannot be undone.')) {
+      return
+    }
+
+    try {
+      const { error } = await supabase
+        .from('orders')
+        .delete()
+        .eq('id', orderId)
+
+      if (error) throw error
+
+      toast.success('Order deleted successfully!')
+      await fetchManagerOrders(profile.company_id)
+      
+      // Close detail view if this order was selected
+      if (selectedOrder?.id === orderId) {
+        setSelectedOrder(null)
+      }
+
+    } catch (error) {
+      console.error('Error deleting order:', error)
+      toast.error('Failed to delete order')
+    }
+  }
+
+  const showAssignWorkersModal = (order) => {
+    // Set the order and show assignment interface
+    setSelectedOrder(order)
+    // You can add a separate modal state for assignments if needed
+    // For now, we'll use the selectedOrder state to show assignment UI
+  }
+
   const resetForm = () => {
     setFormData({
       title: '',
@@ -364,7 +443,8 @@ const Orders = () => {
       specs: {},
       assignment_type: 'general',
       assigned_workers: [],
-      images: []
+      images: [],
+      editingOrderId: null
     })
     setSelectedImages([])
   }
@@ -439,7 +519,9 @@ const Orders = () => {
           <div className="bg-white rounded-lg shadow-lg max-w-2xl w-full max-h-[95vh] overflow-y-auto">
             <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200 sticky top-0 bg-white">
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-medium text-gray-900">Create New Order</h3>
+                <h3 className="text-lg font-medium text-gray-900">
+                  {formData.editingOrderId ? 'Edit Order' : 'Create New Order'}
+                </h3>
                 <button
                   onClick={() => {
                     setShowCreateForm(false)
@@ -669,7 +751,12 @@ const Orders = () => {
                   disabled={loading || uploadingImages}
                   className="w-full sm:w-auto px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 disabled:opacity-50 order-1 sm:order-2"
                 >
-                  {loading ? 'Creating...' : uploadingImages ? 'Uploading...' : 'Create Order'}
+                  {loading 
+                    ? (formData.editingOrderId ? 'Updating...' : 'Creating...') 
+                    : uploadingImages 
+                      ? 'Uploading...' 
+                      : (formData.editingOrderId ? 'Update Order' : 'Create Order')
+                  }
                 </button>
               </div>
             </form>
@@ -784,13 +871,22 @@ const Orders = () => {
                     <div className="bg-gray-50 rounded-lg p-4">
                       <h3 className="text-lg font-medium text-gray-900 mb-3">Actions</h3>
                       <div className="space-y-2">
-                        <button className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                        <button 
+                          onClick={() => editOrder(selectedOrder)}
+                          className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                        >
                           Edit Order
                         </button>
-                        <button className="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                        <button 
+                          onClick={() => showAssignWorkersModal(selectedOrder)}
+                          className="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                        >
                           Assign Workers
                         </button>
-                        <button className="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+                        <button 
+                          onClick={() => deleteOrder(selectedOrder.id)}
+                          className="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+                        >
                           Delete Order
                         </button>
                       </div>
@@ -982,17 +1078,35 @@ const Orders = () => {
                       
                       {profile?.role === 'manager' && (
                         <>
-                          <button className="px-3 py-1.5 bg-green-600 text-white text-xs font-medium rounded hover:bg-green-700 transition-colors">
+                          <button 
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              showAssignWorkersModal(order)
+                            }}
+                            className="px-3 py-1.5 bg-green-600 text-white text-xs font-medium rounded hover:bg-green-700 transition-colors"
+                          >
                             Assign Workers
                           </button>
-                          <button className="px-3 py-1.5 bg-amber-600 text-white text-xs font-medium rounded hover:bg-amber-700 transition-colors">
+                          <button 
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              editOrder(order)
+                            }}
+                            className="px-3 py-1.5 bg-amber-600 text-white text-xs font-medium rounded hover:bg-amber-700 transition-colors"
+                          >
                             Edit Order
                           </button>
                         </>
                       )}
                       
                       {order.assignment_id && !order.marked_done && (
-                        <button className="px-3 py-1.5 bg-purple-600 text-white text-xs font-medium rounded hover:bg-purple-700 transition-colors">
+                        <button 
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            markOrderDone(order.id, order.assignment_id)
+                          }}
+                          className="px-3 py-1.5 bg-purple-600 text-white text-xs font-medium rounded hover:bg-purple-700 transition-colors"
+                        >
                           Mark Complete
                         </button>
                       )}
