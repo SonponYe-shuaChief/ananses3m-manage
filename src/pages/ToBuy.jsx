@@ -221,7 +221,7 @@ const ToBuy = () => {
                         value={editData.estimated_cost}
                         onChange={(e) => setEditData({...editData, estimated_cost: e.target.value})}
                         className="w-full sm:w-24 px-3 py-2 border border-gray-300 rounded-md text-sm sm:text-base"
-                        placeholder="Price"
+                        placeholder="GH₵"
                         step="0.01"
                       />
                       <div className="flex gap-2">
@@ -244,7 +244,7 @@ const ToBuy = () => {
                       <div className="flex-1">
                         <h3 className="font-medium text-gray-900 text-sm sm:text-base">{item.item_name}</h3>
                         {item.estimated_cost && (
-                          <p className="text-xs sm:text-sm text-gray-600">${item.estimated_cost}</p>
+                          <p className="text-xs sm:text-sm text-gray-600">GH₵{item.estimated_cost}</p>
                         )}
                       </div>
                       <div className="grid grid-cols-3 gap-2 sm:flex sm:gap-2">
@@ -286,7 +286,7 @@ const ToBuy = () => {
                     <div className="flex-1">
                       <h3 className="font-medium text-gray-900 line-through text-sm sm:text-base">{item.item_name}</h3>
                       {item.estimated_cost && (
-                        <p className="text-xs sm:text-sm text-gray-600">${item.estimated_cost}</p>
+                        <p className="text-xs sm:text-sm text-gray-600">GH₵{item.estimated_cost}</p>
                       )}
                     </div>
                     <div className="grid grid-cols-2 gap-2 sm:flex sm:gap-2">
@@ -360,14 +360,14 @@ const ToBuy = () => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Estimated Price
+                  Estimated Price (GH₵)
                 </label>
                 <input
                   type="number"
                   value={newItem.estimated_cost}
                   onChange={(e) => setNewItem({...newItem, estimated_cost: e.target.value})}
                   className="w-full px-3 py-3 sm:py-2 border border-gray-300 rounded-md text-base sm:text-sm"
-                  placeholder="0.00"
+                  placeholder="0.00 GH₵"
                   step="0.01"
                 />
               </div>

@@ -402,25 +402,69 @@ const Orders = () => {
       return
     }
 
+    // Show loading toast
+    const loadingToast = toast.loading('Deleting order...')
+
     try {
-      const { error } = await supabase
+      // Test: Check if user can see this order first
+      const { data: orderCheck, error: checkError } = await supabase
+        .from('orders')
+        .select('id, title')
+        .eq('id', orderId)
+        .single()
+      
+      console.log('Order check before delete:', orderCheck, checkError)
+      
+      // First delete any order assignments
+      const { error: assignmentError } = await supabase
+        .from('order_assignments')
+        .delete()
+        .eq('order_id', orderId)
+
+      if (assignmentError) {
+        console.warn('Warning deleting assignments:', assignmentError)
+        // Continue anyway - assignments might not exist
+      }
+
+      // Then delete the order
+      const { data: deletedData, error: orderError } = await supabase
         .from('orders')
         .delete()
         .eq('id', orderId)
+        .select()
 
-      if (error) throw error
+      if (orderError) throw orderError
+      
+      console.log('Deleted order:', deletedData)
 
+      toast.dismiss(loadingToast)
       toast.success('Order deleted successfully!')
-      await fetchManagerOrders(profile.company_id)
+      
+      // Immediately remove the order from the local state
+      setOrders(prevOrders => prevOrders.filter(order => order.id !== orderId))
       
       // Close detail view if this order was selected
       if (selectedOrder?.id === orderId) {
         setSelectedOrder(null)
       }
+      
+      // Refresh orders from server to ensure consistency
+      if (profile?.role === 'manager') {
+        await fetchManagerOrders(profile.company_id)
+      } else {
+        await fetchWorkerOrders(user.id, profile.company_id)
+      }
 
     } catch (error) {
+      toast.dismiss(loadingToast)
       console.error('Error deleting order:', error)
-      toast.error('Failed to delete order')
+      console.error('Error details:', {
+        message: error.message,
+        details: error.details,
+        hint: error.hint,
+        code: error.code
+      })
+      toast.error(`Failed to delete order: ${error.message}`)
     }
   }
 
@@ -1095,6 +1139,15 @@ const Orders = () => {
                             className="px-3 py-1.5 bg-amber-600 text-white text-xs font-medium rounded hover:bg-amber-700 transition-colors"
                           >
                             Edit Order
+                          </button>
+                          <button 
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              deleteOrder(order.id)
+                            }}
+                            className="px-3 py-1.5 bg-red-600 text-white text-xs font-medium rounded hover:bg-red-700 transition-colors"
+                          >
+                            Delete
                           </button>
                         </>
                       )}
