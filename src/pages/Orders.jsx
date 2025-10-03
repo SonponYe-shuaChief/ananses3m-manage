@@ -677,10 +677,136 @@ const Orders = () => {
         </div>
       )}
 
+      {/* Order Detail Modal */}
+      {selectedOrder && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[95vh] overflow-hidden flex flex-col">
+            {/* Modal Header */}
+            <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <h2 className="text-xl font-semibold text-gray-900">{selectedOrder.title}</h2>
+                  <span className={`badge ${getStatusBadgeClass(selectedOrder.status)}`}>
+                    {selectedOrder.status?.replace('_', ' ').toUpperCase()}
+                  </span>
+                  <span className={`badge ${getPriorityBadgeClass(selectedOrder.priority)}`}>
+                    {selectedOrder.priority} priority
+                  </span>
+                </div>
+                <button
+                  onClick={() => setSelectedOrder(null)}
+                  className="text-gray-400 hover:text-gray-600 p-2"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            {/* Modal Content */}
+            <div className="flex-1 overflow-y-auto p-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Order Information */}
+                <div className="space-y-4">
+                  <div className="bg-gray-50 rounded-lg p-4">
+                    <h3 className="text-lg font-medium text-gray-900 mb-3">Order Details</h3>
+                    <div className="space-y-3">
+                      <div>
+                        <label className="text-sm font-medium text-gray-700">Client Name</label>
+                        <p className="text-gray-900">{selectedOrder.client_name}</p>
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="text-sm font-medium text-gray-700">Due Date</label>
+                          <p className="text-gray-900">{new Date(selectedOrder.due_date).toLocaleDateString()}</p>
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium text-gray-700">Quantity</label>
+                          <p className="text-gray-900">{selectedOrder.quantity}</p>
+                        </div>
+                      </div>
+                      {selectedOrder.category && (
+                        <div>
+                          <label className="text-sm font-medium text-gray-700">Category</label>
+                          <p className="text-gray-900">{selectedOrder.category}</p>
+                        </div>
+                      )}
+                      <div>
+                        <label className="text-sm font-medium text-gray-700">Created</label>
+                        <p className="text-gray-900">{new Date(selectedOrder.created_at).toLocaleDateString()}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {selectedOrder.details && (
+                    <div className="bg-blue-50 rounded-lg p-4">
+                      <h3 className="text-lg font-medium text-gray-900 mb-3">Description</h3>
+                      <p className="text-gray-700 whitespace-pre-wrap">{selectedOrder.details}</p>
+                    </div>
+                  )}
+
+                  {selectedOrder.specs && Object.keys(selectedOrder.specs).length > 0 && (
+                    <div className="bg-green-50 rounded-lg p-4">
+                      <h3 className="text-lg font-medium text-gray-900 mb-3">Specifications</h3>
+                      <div className="space-y-2">
+                        {Object.entries(selectedOrder.specs).map(([key, value]) => (
+                          <div key={key} className="flex justify-between">
+                            <span className="text-gray-700 font-medium">{key}:</span>
+                            <span className="text-gray-900">{value}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Images and Actions */}
+                <div className="space-y-4">
+                  {selectedOrder.image_urls && selectedOrder.image_urls.length > 0 && (
+                    <div>
+                      <h3 className="text-lg font-medium text-gray-900 mb-3">Images</h3>
+                      <div className="grid grid-cols-2 gap-2">
+                        {selectedOrder.image_urls.map((url, index) => (
+                          <img
+                            key={index}
+                            src={url}
+                            alt={`Order image ${index + 1}`}
+                            className="w-full h-32 object-cover rounded-lg cursor-pointer hover:opacity-80"
+                            onClick={() => openImageModal(url, selectedOrder.image_urls, index)}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {profile?.role === 'manager' && (
+                    <div className="bg-gray-50 rounded-lg p-4">
+                      <h3 className="text-lg font-medium text-gray-900 mb-3">Actions</h3>
+                      <div className="space-y-2">
+                        <button className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                          Edit Order
+                        </button>
+                        <button className="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                          Assign Workers
+                        </button>
+                        <button className="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+                          Delete Order
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Orders List */}
-      <div className="bg-white rounded-lg shadow">
+      <div className="space-y-3">
         {orders.length === 0 ? (
-          <div className="px-4 py-8 sm:px-6 sm:py-12 text-center">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
             <div className="w-12 h-12 mx-auto mb-4 text-gray-400">
               <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
@@ -695,155 +821,187 @@ const Orders = () => {
             {profile?.role === 'manager' && (
               <button
                 onClick={() => setShowCreateForm(true)}
-                className="w-full sm:w-auto px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
+                className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
               >
                 Create Your First Order
               </button>
             )}
           </div>
         ) : (
-          <div className="divide-y divide-gray-200">
-            {orders.map((order) => {
-              const isExpanded = expandedOrders.has(order.id)
-              return (
-              <div key={order.id} className="p-4 sm:p-6 hover:bg-gray-50 border-l-4 border-l-primary-200">
-                <div className="flex flex-col space-y-3">
-                  {/* Header - Always visible */}
-                  <div className="flex items-start justify-between cursor-pointer" onClick={() => toggleOrderExpansion(order.id)}>
-                    <div className="flex-1">
-                      <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-2">
+          orders.map((order) => {
+            const isExpanded = expandedOrders.has(order.id)
+            const isOverdue = new Date(order.due_date) < new Date() && order.status !== 'completed'
+            
+            return (
+              <div 
+                key={order.id} 
+                className={`bg-white rounded-lg shadow-sm border transition-all duration-200 hover:shadow-md ${
+                  isOverdue ? 'border-red-200 bg-red-50' : 'border-gray-200 hover:border-blue-300'
+                }`}
+              >
+                {/* Collapsed View - Always Visible */}
+                <div className="p-4 cursor-pointer" onClick={() => toggleOrderExpansion(order.id)}>
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1 min-w-0">
+                      {/* Title and Status */}
+                      <div className="flex items-center space-x-3 mb-2">
+                        <h3 className="text-lg font-semibold text-gray-900 truncate">
+                          {order.title}
+                        </h3>
                         <div className="flex items-center space-x-2">
-                          <h3 className="text-lg font-medium text-gray-900">
-                            {order.title}
-                          </h3>
-                          <svg 
-                            className={`w-5 h-5 text-gray-400 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
-                            fill="none" 
-                            stroke="currentColor" 
-                            viewBox="0 0 24 24"
-                          >
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
-                          </svg>
-                        </div>
-                        <div className="flex flex-wrap gap-2">
-                          <span className={`badge ${getStatusBadgeClass(order.status)}`}>
+                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusBadgeClass(order.status)}`}>
                             {order.status?.replace('_', ' ').toUpperCase()}
                           </span>
-                          <span className={`badge ${getPriorityBadgeClass(order.priority)}`}>
-                            {order.priority} priority
-                          </span>
-                          {order.marked_done && (
-                            <span className="badge badge-success flex items-center gap-1">
-                              <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path>
-                              </svg>
-                              Completed
+                          {isOverdue && (
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                              OVERDUE
                             </span>
                           )}
                         </div>
                       </div>
                       
-                      {/* Quick info - Always visible */}
-                      <div className="flex items-center space-x-4 mt-2 text-sm text-gray-600">
-                        <span>Client: {order.client_name}</span>
-                        <span>Due: {new Date(order.due_date).toLocaleDateString()}</span>
-                        <span>Qty: {order.quantity}</span>
+                      {/* Key Info - Always Visible */}
+                      <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
+                        <span className="flex items-center">
+                          <svg className="w-4 h-4 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                          </svg>
+                          {order.client_name}
+                        </span>
+                        <span className="flex items-center">
+                          <svg className="w-4 h-4 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                          </svg>
+                          {new Date(order.due_date).toLocaleDateString()}
+                        </span>
+                        <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${getPriorityBadgeClass(order.priority)}`}>
+                          {order.priority} priority
+                        </span>
                       </div>
                     </div>
+                    
+                    {/* Action Buttons */}
+                    <div className="flex items-center space-x-2 ml-4">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          setSelectedOrder(order)
+                        }}
+                        className="p-2 text-blue-600 hover:bg-blue-100 rounded-full transition-colors"
+                        title="View Details"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                        </svg>
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          toggleOrderExpansion(order.id)
+                        }}
+                        className="p-2 text-gray-400 hover:bg-gray-100 rounded-full transition-all duration-200"
+                      >
+                        <svg 
+                          className={`w-5 h-5 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
+                          fill="none" 
+                          stroke="currentColor" 
+                          viewBox="0 0 24 24"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                      </button>
+                    </div>
                   </div>
+                </div>
 
-                  {/* Expandable content */}
-                  {isExpanded && (
-                    <div className="space-y-3 pt-3 border-t border-gray-100">
-                      {order.details && (
+                {/* Expanded Content */}
+                {isExpanded && (
+                  <div className="px-4 pb-4 space-y-4 border-t border-gray-100">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {/* Order Details */}
+                      <div className="space-y-3">
+                        {order.details && (
+                          <div>
+                            <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Description</p>
+                            <p className="text-sm text-gray-700">{order.details}</p>
+                          </div>
+                        )}
+                        
+                        {order.category && (
+                          <div>
+                            <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Category</p>
+                            <p className="text-sm text-gray-700">{order.category}</p>
+                          </div>
+                        )}
+
                         <div>
-                          <p className="text-xs sm:text-sm text-gray-500 mb-1">Details</p>
-                          <p className="text-sm text-gray-600">{order.details}</p>
+                          <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Created</p>
+                          <p className="text-sm text-gray-700">{new Date(order.created_at).toLocaleDateString()}</p>
                         </div>
-                      )}
+                      </div>
 
-                      {order.category && (
-                        <div>
-                          <p className="text-xs sm:text-sm text-gray-500 mb-1">Category</p>
-                          <span className="badge badge-info">{order.category}</span>
-                        </div>
-                      )}
-
-                      {/* Display order images */}
+                      {/* Images */}
                       {order.image_urls && order.image_urls.length > 0 && (
                         <div>
-                          <p className="text-xs sm:text-sm text-gray-500 mb-2">Order Images</p>
-                          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">
-                            {order.image_urls.map((url, index) => (
-                              <div key={index} className="relative group">
-                                <img
-                                  src={url}
-                                  alt={`Order image ${index + 1}`}
-                                  className="w-full h-12 sm:h-16 object-cover rounded-lg cursor-pointer hover:opacity-75 transition-opacity"
-                                  onClick={() => openImageModal(url, order.image_urls, index)}
-                                />
-                                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-25 transition-all rounded-lg flex items-center justify-center">
-                                  <svg className="w-3 h-3 sm:w-4 sm:h-4 text-white opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                                  </svg>
-                                </div>
-                              </div>
+                          <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Images</p>
+                          <div className="grid grid-cols-3 gap-2">
+                            {order.image_urls.slice(0, 6).map((url, index) => (
+                              <img
+                                key={index}
+                                src={url}
+                                alt={`Order ${index + 1}`}
+                                className="w-full h-16 object-cover rounded cursor-pointer hover:opacity-80 transition-opacity"
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  openImageModal(url, order.image_urls, index)
+                                }}
+                              />
                             ))}
+                            {order.image_urls.length > 6 && (
+                              <div className="w-full h-16 bg-gray-100 rounded flex items-center justify-center text-xs text-gray-500">
+                                +{order.image_urls.length - 6} more
+                              </div>
+                            )}
                           </div>
                         </div>
                       )}
                     </div>
-                  )}
 
-                  {/* Action buttons */}
-                  <div className="w-full flex flex-row space-x-2">
-                    {profile?.role === 'manager' ? (
-                      <>
-                        {order.status !== 'completed' && (
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              updateOrderStatus(order.id, 'in_progress')
-                            }}
-                            className="flex-1 px-3 py-1 text-sm bg-blue-100 text-blue-800 rounded hover:bg-blue-200 whitespace-nowrap"
-                          >
-                            Start
+                    {/* Actions for expanded view */}
+                    <div className="flex flex-wrap gap-2 pt-2 border-t border-gray-100">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          setSelectedOrder(order)
+                        }}
+                        className="px-3 py-1.5 bg-blue-600 text-white text-xs font-medium rounded hover:bg-blue-700 transition-colors"
+                      >
+                        View Full Details
+                      </button>
+                      
+                      {profile?.role === 'manager' && (
+                        <>
+                          <button className="px-3 py-1.5 bg-green-600 text-white text-xs font-medium rounded hover:bg-green-700 transition-colors">
+                            Assign Workers
                           </button>
-                        )}
-                        {order.status === 'in_progress' && (
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              updateOrderStatus(order.id, 'completed')
-                            }}
-                            className="flex-1 px-3 py-1 text-sm bg-green-100 text-green-800 rounded hover:bg-green-200 whitespace-nowrap"
-                          >
-                            Complete
+                          <button className="px-3 py-1.5 bg-amber-600 text-white text-xs font-medium rounded hover:bg-amber-700 transition-colors">
+                            Edit Order
                           </button>
-                        )}
-                      </>
-                    ) : (
-                      !order.marked_done && (
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            markOrderDone(order.id, order.assignment_id)
-                          }}
-                          className="flex-1 px-3 py-1 text-sm bg-green-100 text-green-800 rounded hover:bg-green-200 whitespace-nowrap flex items-center justify-center gap-1"
-                        >
-                          <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path>
-                          </svg>
-                          Mark Done
+                        </>
+                      )}
+                      
+                      {order.assignment_id && !order.marked_done && (
+                        <button className="px-3 py-1.5 bg-purple-600 text-white text-xs font-medium rounded hover:bg-purple-700 transition-colors">
+                          Mark Complete
                         </button>
-                      )
-                    )}
+                      )}
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
-              )
-            })}
-          </div>
+            )
+          })
         )}
       </div>
 
