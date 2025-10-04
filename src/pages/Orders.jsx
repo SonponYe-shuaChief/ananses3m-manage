@@ -106,7 +106,14 @@ const Orders = () => {
       marked_done: a.marked_done
     })) || []
 
-    const allOrders = [...assignedOrders, ...generalOrders]
+    // For general orders, check if current worker has marked them complete
+    const generalOrdersWithCompletion = generalOrders?.map(order => ({
+      ...order,
+      marked_done: order.worker_completed_by === userId,
+      assignment_type: 'general'
+    })) || []
+
+    const allOrders = [...assignedOrders, ...generalOrdersWithCompletion]
     setOrders(allOrders)
   }
 
@@ -387,25 +394,38 @@ const Orders = () => {
         if (error) throw error
         console.log('Updated assignment:', assignmentId)
       } else {
-        // For general orders, create an assignment record showing completion
-        const { data, error } = await supabase
-          .from('order_assignments')
-          .insert({
-            order_id: orderId,
-            worker_id: user.id,
-            assigned_by: user.id,
-            marked_done: true,
-            completed_at: new Date().toISOString()
+        // For general orders, update the order itself with completion info
+        const { error } = await supabase
+          .from('orders')
+          .update({ 
+            worker_completed_by: user.id,
+            worker_completed_at: new Date().toISOString(),
+            status: 'completed'
           })
-          .select()
+          .eq('id', orderId)
 
         if (error) throw error
-        console.log('Created assignment record:', data)
+        console.log('Updated order completion status:', orderId)
       }
 
       toast.success('⭐ Marked as complete for inspection!')
       
-      // Refresh orders
+      // Update local state immediately
+      setOrders(prevOrders => 
+        prevOrders.map(order => 
+          order.id === orderId 
+            ? { 
+                ...order, 
+                marked_done: true,
+                worker_completed_by: user.id,
+                worker_completed_at: new Date().toISOString(),
+                status: assignmentId ? order.status : 'completed'
+              } 
+            : order
+        )
+      )
+      
+      // Refresh orders from server
       if (profile?.role === 'manager') {
         await fetchManagerOrders(profile.company_id)
       } else {
