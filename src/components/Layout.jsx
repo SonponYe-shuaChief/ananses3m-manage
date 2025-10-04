@@ -129,10 +129,12 @@ const Layout = ({ children }) => {
               </div>
               <button
                 onClick={handleSignOut}
-                className="ml-3 text-gray-400 hover:text-gray-600 transition-colors duration-200"
+                className="ml-3 text-gray-400 hover:text-red-600 transition-colors duration-200"
                 title="Sign out"
               >
-                <span className="text-lg"></span>
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                </svg>
               </button>
             </div>
           </div>
@@ -159,13 +161,22 @@ const Layout = ({ children }) => {
               </h1>
             </div>
 
-            <div className="flex items-center space-x-4">
-              {/* Notifications placeholder */}
-              <button className="p-2 rounded-md text-gray-400 hover:text-gray-600 hover:bg-gray-100">
-                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5-5-5h5z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 12H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2z" />
+            <div className="flex items-center space-x-2">
+              {/* User email display on desktop */}
+              <div className="hidden sm:block text-sm text-gray-600">
+                {user?.email}
+              </div>
+              
+              {/* Logout button */}
+              <button 
+                onClick={handleSignOut}
+                className="flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:text-red-600 hover:bg-gray-100 rounded-md transition-colors duration-200"
+                title="Sign out"
+              >
+                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
                 </svg>
+                <span className="hidden sm:inline">Logout</span>
               </button>
             </div>
           </div>
