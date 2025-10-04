@@ -9,8 +9,15 @@ const Layout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
   const handleSignOut = async () => {
-    await signOut()
-    navigate('/login')
+    try {
+      await signOut()
+    } catch (error) {
+      console.error('Logout error:', error)
+      // Even if logout fails, redirect to login
+    } finally {
+      // Always navigate to login regardless of logout success/failure
+      navigate('/login', { replace: true })
+    }
   }
 
   const navigation = [
@@ -125,7 +132,7 @@ const Layout = ({ children }) => {
                 className="ml-3 text-gray-400 hover:text-gray-600 transition-colors duration-200"
                 title="Sign out"
               >
-                <span className="text-lg">🚪</span>
+                <span className="text-lg"></span>
               </button>
             </div>
           </div>

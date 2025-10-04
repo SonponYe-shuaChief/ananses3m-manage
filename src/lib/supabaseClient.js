@@ -23,7 +23,10 @@ export const supabase = createClient(
     auth: {
       autoRefreshToken: true,
       persistSession: true,
-      detectSessionInUrl: true
+      detectSessionInUrl: true,
+      storageKey: 'ananses3m-auth-token',
+      storage: window.localStorage,
+      flowType: 'pkce'
     },
     db: {
       schema: 'public'
