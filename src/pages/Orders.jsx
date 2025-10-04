@@ -14,11 +14,10 @@ const Orders = () => {
   const [formData, setFormData] = useState({
     title: '',
     details: '',
-    client_name: '',
+    client_number: '',
     due_date: '',
     priority: 'medium',
     category: '',
-    quantity: 1,
     specs: {},
     assignment_type: 'general',
     assigned_workers: [],
@@ -240,7 +239,7 @@ const Orders = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     
-    if (!formData.title || !formData.client_name || !formData.due_date) {
+    if (!formData.title || !formData.client_number || !formData.due_date) {
       toast.error('Please fill in all required fields')
       return
     }
@@ -260,11 +259,10 @@ const Orders = () => {
           .update({
             title: formData.title,
             details: formData.details,
-            client_name: formData.client_name,
+            client_name: formData.client_number, // Use client_name column for now
             due_date: formData.due_date,
             priority: formData.priority,
             category: formData.category,
-            quantity: formData.quantity,
             specs: formData.specs,
             assignment_type: formData.assignment_type,
             image_urls: imageUrls.length > 0 ? imageUrls : formData.images
@@ -281,11 +279,10 @@ const Orders = () => {
           .insert({
             title: formData.title,
             details: formData.details,
-            client_name: formData.client_name,
+            client_name: formData.client_number, // Use client_name column for now
             due_date: formData.due_date,
             priority: formData.priority,
             category: formData.category,
-            quantity: formData.quantity,
             specs: formData.specs,
             assignment_type: formData.assignment_type,
             company_id: profile.company_id,
@@ -322,7 +319,8 @@ const Orders = () => {
 
     } catch (error) {
       console.error(`Error ${formData.editingOrderId ? 'updating' : 'creating'} order:`, error)
-      toast.error(`Failed to ${formData.editingOrderId ? 'update' : 'create'} order`)
+      console.error('Error details:', error.details, error.message, error.hint)
+      toast.error(`Failed to ${formData.editingOrderId ? 'update' : 'create'} order: ${error.message || 'Unknown error'}`)
     } finally {
       setLoading(false)
     }
@@ -360,6 +358,49 @@ const Orders = () => {
     }
   }
 
+  const markForInspection = async (orderId, assignmentId = null) => {
+    try {
+      if (assignmentId) {
+        // Mark assignment as ready for inspection
+        const { error } = await supabase
+          .from('order_assignments')
+          .update({ 
+            marked_done: true,
+            completed_at: new Date().toISOString()
+          })
+          .eq('id', assignmentId)
+
+        if (error) throw error
+      } else {
+        // For general orders, create an assignment record showing completion
+        const { error } = await supabase
+          .from('order_assignments')
+          .insert({
+            order_id: orderId,
+            worker_id: user.id,
+            assigned_by: user.id,
+            marked_done: true,
+            completed_at: new Date().toISOString()
+          })
+
+        if (error) throw error
+      }
+
+      toast.success('⭐ Marked as complete for inspection!')
+      
+      // Refresh orders
+      if (profile?.role === 'manager') {
+        await fetchManagerOrders(profile.company_id)
+      } else {
+        await fetchWorkerOrders(user.id, profile.company_id)
+      }
+
+    } catch (error) {
+      console.error('Error marking for inspection:', error)
+      toast.error('Failed to mark for inspection')
+    }
+  }
+
   const updateOrderStatus = async (orderId, status) => {
     try {
       const { error } = await supabase
@@ -369,8 +410,19 @@ const Orders = () => {
 
       if (error) throw error
 
+      // Update the local state immediately
+      setOrders(prevOrders => 
+        prevOrders.map(order => 
+          order.id === orderId ? { ...order, status } : order
+        )
+      )
+
+      // Update selected order if it's the one being changed
+      if (selectedOrder?.id === orderId) {
+        setSelectedOrder(prev => ({ ...prev, status }))
+      }
+
       toast.success('Order status updated!')
-      await fetchManagerOrders(profile.company_id)
 
     } catch (error) {
       console.error('Error updating order status:', error)
@@ -382,11 +434,10 @@ const Orders = () => {
     setFormData({
       title: order.title,
       details: order.details || '',
-      client_name: order.client_name,
+      client_number: order.client_name || '', // Use client_name from database for client_number form field
       due_date: order.due_date,
       priority: order.priority,
       category: order.category || '',
-      quantity: order.quantity || 1,
       specs: order.specs || {},
       assignment_type: order.assignment_type,
       assigned_workers: [], // Will be filled from assignments
@@ -475,15 +526,16 @@ const Orders = () => {
     // For now, we'll use the selectedOrder state to show assignment UI
   }
 
+
+
   const resetForm = () => {
     setFormData({
       title: '',
       details: '',
-      client_name: '',
+      client_number: '',
       due_date: '',
       priority: 'medium',
       category: '',
-      quantity: 1,
       specs: {},
       assignment_type: 'general',
       assigned_workers: [],
@@ -596,14 +648,15 @@ const Orders = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
-                    Client Name *
+                    Client Number *
                   </label>
                   <input
-                    type="text"
-                    name="client_name"
+                    type="tel"
+                    name="client_number"
                     required
                     className="input-field mt-1"
-                    value={formData.client_name}
+                    placeholder="e.g., +233123456789"
+                    value={formData.client_number}
                     onChange={handleInputChange}
                   />
                 </div>
@@ -652,19 +705,7 @@ const Orders = () => {
                   />
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Quantity
-                  </label>
-                  <input
-                    type="number"
-                    name="quantity"
-                    min="1"
-                    className="input-field mt-1"
-                    value={formData.quantity}
-                    onChange={handleInputChange}
-                  />
-                </div>
+
               </div>
 
               <div>
@@ -817,9 +858,24 @@ const Orders = () => {
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
                   <h2 className="text-xl font-semibold text-gray-900">{selectedOrder.title}</h2>
-                  <span className={`badge ${getStatusBadgeClass(selectedOrder.status)}`}>
-                    {selectedOrder.status?.replace('_', ' ').toUpperCase()}
-                  </span>
+                  
+                  {/* Status Management for Managers */}
+                  {profile?.role === 'manager' ? (
+                    <select
+                      value={selectedOrder.status}
+                      onChange={(e) => updateOrderStatus(selectedOrder.id, e.target.value)}
+                      className="px-3 py-1 border border-gray-300 rounded-md text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    >
+                      <option value="pending">PENDING</option>
+                      <option value="in_progress">IN PROGRESS</option>
+                      <option value="completed">COMPLETED</option>
+                    </select>
+                  ) : (
+                    <span className={`badge ${getStatusBadgeClass(selectedOrder.status)}`}>
+                      {selectedOrder.status?.replace('_', ' ').toUpperCase()}
+                    </span>
+                  )}
+                  
                   <span className={`badge ${getPriorityBadgeClass(selectedOrder.priority)}`}>
                     {selectedOrder.priority} priority
                   </span>
@@ -844,18 +900,25 @@ const Orders = () => {
                     <h3 className="text-lg font-medium text-gray-900 mb-3">Order Details</h3>
                     <div className="space-y-3">
                       <div>
-                        <label className="text-sm font-medium text-gray-700">Client Name</label>
-                        <p className="text-gray-900">{selectedOrder.client_name}</p>
+                        <label className="text-sm font-medium text-gray-700">Client Number</label>
+                        <div className="flex items-center space-x-2">
+                          <p className="text-gray-900">{selectedOrder.client_name}</p>
+                          {selectedOrder.client_name && (
+                            <a 
+                              href={`tel:${selectedOrder.client_name}`}
+                              className="text-blue-600 hover:text-blue-800 p-1"
+                              title="Call Client"
+                            >
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21L6.565 10.91a11.054 11.054 0 005.525 5.525l1.523-3.659a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                              </svg>
+                            </a>
+                          )}
+                        </div>
                       </div>
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <label className="text-sm font-medium text-gray-700">Due Date</label>
-                          <p className="text-gray-900">{new Date(selectedOrder.due_date).toLocaleDateString()}</p>
-                        </div>
-                        <div>
-                          <label className="text-sm font-medium text-gray-700">Quantity</label>
-                          <p className="text-gray-900">{selectedOrder.quantity}</p>
-                        </div>
+                      <div>
+                        <label className="text-sm font-medium text-gray-700">Due Date</label>
+                        <p className="text-gray-900">{new Date(selectedOrder.due_date).toLocaleDateString()}</p>
                       </div>
                       {selectedOrder.category && (
                         <div>
@@ -992,6 +1055,14 @@ const Orders = () => {
                           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusBadgeClass(order.status)}`}>
                             {order.status?.replace('_', ' ').toUpperCase()}
                           </span>
+                          {order.marked_done && (
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                              <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                              </svg>
+                              FOR INSPECTION
+                            </span>
+                          )}
                           {isOverdue && (
                             <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
                               OVERDUE
@@ -1004,9 +1075,15 @@ const Orders = () => {
                       <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
                         <span className="flex items-center">
                           <svg className="w-4 h-4 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21L6.565 10.91a11.054 11.054 0 005.525 5.525l1.523-3.659a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
                           </svg>
-                          {order.client_name}
+                          <a 
+                            href={`tel:${order.client_name}`} 
+                            className="text-blue-600 hover:text-blue-800"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            {order.client_name}
+                          </a>
                         </span>
                         <span className="flex items-center">
                           <svg className="w-4 h-4 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1022,6 +1099,33 @@ const Orders = () => {
                     
                     {/* Action Buttons */}
                     <div className="flex items-center space-x-2 ml-4">
+                      {/* Star button for workers to mark complete */}
+                      {profile?.role === 'worker' && !order.marked_done && (order.assignment_id || order.assignment_type === 'general') && (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            markForInspection(order.id, order.assignment_id)
+                          }}
+                          className="p-2 text-yellow-600 hover:bg-yellow-100 rounded-full transition-colors relative"
+                          title="Mark as Complete for Inspection"
+                        >
+                          <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                          </svg>
+                        </button>
+                      )}
+                      
+
+                      
+                      {/* Completed star indicator */}
+                      {order.marked_done && (
+                        <div className="p-2 text-green-600" title="Completed - Ready for Inspection">
+                          <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                          </svg>
+                        </div>
+                      )}
+                      
                       <button
                         onClick={(e) => {
                           e.stopPropagation()
@@ -1058,6 +1162,9 @@ const Orders = () => {
                 {/* Expanded Content */}
                 {isExpanded && (
                   <div className="px-4 pb-4 space-y-4 border-t border-gray-100">
+                    <div className="bg-yellow-100 p-2 rounded text-xs text-yellow-800 mb-2">
+                      🔍 EXPANDED VIEW - Call Client button should appear below
+                    </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {/* Order Details */}
                       <div className="space-y-3">
@@ -1110,6 +1217,20 @@ const Orders = () => {
 
                     {/* Actions for expanded view */}
                     <div className="flex flex-wrap gap-2 pt-2 border-t border-gray-100">
+                      <div className="w-full bg-blue-100 p-1 rounded text-xs text-blue-800 mb-2">
+                        👤 Role: {profile?.role} | Actions below should include Call Client button for ALL users
+                      </div>
+                      <a
+                        href={`tel:${order.client_name}`}
+                        className="px-3 py-1.5 bg-purple-600 text-white text-xs font-medium rounded hover:bg-purple-700 transition-colors flex items-center gap-1"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21L6.565 10.91a11.054 11.054 0 005.525 5.525l1.523-3.659a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                        </svg>
+                        Call Client
+                      </a>
+                      
                       <button
                         onClick={(e) => {
                           e.stopPropagation()
@@ -1119,6 +1240,27 @@ const Orders = () => {
                       >
                         View Full Details
                       </button>
+                      
+                      {/* Status changer - Managers can change, Workers can see current status */}
+                      {profile?.role === 'manager' ? (
+                        <select
+                          value={order.status}
+                          onChange={(e) => {
+                            e.stopPropagation()
+                            updateOrderStatus(order.id, e.target.value)
+                          }}
+                          onClick={(e) => e.stopPropagation()}
+                          className="px-2 py-1 border border-gray-300 rounded text-xs font-medium focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white"
+                        >
+                          <option value="pending">Pending</option>
+                          <option value="in_progress">In Progress</option>
+                          <option value="completed">Completed</option>
+                        </select>
+                      ) : (
+                        <div className="px-2 py-1 border border-gray-300 rounded text-xs font-medium bg-gray-100">
+                          Status: {order.status?.replace('_', ' ').toUpperCase()}
+                        </div>
+                      )}
                       
                       {profile?.role === 'manager' && (
                         <>
@@ -1131,6 +1273,7 @@ const Orders = () => {
                           >
                             Assign Workers
                           </button>
+                          
                           <button 
                             onClick={(e) => {
                               e.stopPropagation()
@@ -1152,7 +1295,35 @@ const Orders = () => {
                         </>
                       )}
                       
-                      {order.assignment_id && !order.marked_done && (
+                      {/* Worker actions */}
+                      {profile?.role === 'worker' && !order.marked_done && (order.assignment_id || order.assignment_type === 'general') && (
+                        <button 
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            markForInspection(order.id, order.assignment_id)
+                          }}
+                          className="px-3 py-1.5 bg-yellow-500 text-white text-xs font-medium rounded hover:bg-yellow-600 transition-colors flex items-center gap-1"
+                        >
+                          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                          </svg>
+                          Complete for Inspection
+                        </button>
+                      )}
+                      
+
+                      
+                      {/* Show completed status */}
+                      {order.marked_done && (
+                        <div className="px-3 py-1.5 bg-green-100 text-green-800 text-xs font-medium rounded flex items-center gap-1">
+                          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                          </svg>
+                          Ready for Inspection
+                        </div>
+                      )}
+                      
+                      {order.assignment_id && !order.marked_done && profile?.role === 'worker' && (
                         <button 
                           onClick={(e) => {
                             e.stopPropagation()
@@ -1160,7 +1331,7 @@ const Orders = () => {
                           }}
                           className="px-3 py-1.5 bg-purple-600 text-white text-xs font-medium rounded hover:bg-purple-700 transition-colors"
                         >
-                          Mark Complete
+                          Mark Complete (Old)
                         </button>
                       )}
                     </div>
