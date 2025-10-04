@@ -106,7 +106,7 @@ const Orders = () => {
       marked_done: a.marked_done
     })) || []
 
-    // For general orders, consider completed status as marked done
+    // For general orders, use status to determine completion (visible to everyone)
     const generalOrdersWithCompletion = generalOrders?.map(order => ({
       ...order,
       marked_done: order.status === 'completed',
@@ -394,7 +394,7 @@ const Orders = () => {
         if (error) throw error
         console.log('Updated assignment:', assignmentId)
       } else {
-        // For general orders, just update the status to indicate completion
+        // For general orders, update the order status so everyone (including manager) can see completion
         const { error } = await supabase
           .from('orders')
           .update({ 
@@ -403,7 +403,7 @@ const Orders = () => {
           .eq('id', orderId)
 
         if (error) throw error
-        console.log('Updated order status to completed:', orderId)
+        console.log('Updated general order status to completed:', orderId)
       }
 
       toast.success('⭐ Marked as complete for inspection!')
@@ -415,7 +415,7 @@ const Orders = () => {
             ? { 
                 ...order, 
                 marked_done: true,
-                status: assignmentId ? order.status : 'completed'
+                status: assignmentId ? order.status : 'completed' // Update status for general orders
               } 
             : order
         )
